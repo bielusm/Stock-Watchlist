@@ -1,0 +1,19 @@
+{
+  "name": "stock-watchlist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev && npm run build:prod && cd ../server && npm install && cd ..",
+    "start": "cd server && npm run start",
+    "client": "cd client && npm run start",
+    "server": "cd server && npm run server",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "cd server && npm test && cd ../client && npm test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^5.1.0"
+  }
+}
