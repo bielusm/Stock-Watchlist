@@ -1,5 +1,9 @@
 const moment = require('moment');
 
+const getCurrentValue = globalQuote => {
+  return parseFloat(globalQuote['05. price']);
+};
+
 //Takes a weekly time series and returns an array of keys sorted by date
 //in order of most recent to furthest
 //adapted from https://stackoverflow.com/a/31102605
@@ -17,7 +21,7 @@ const getSortedKeysByDate = weeklyTimeSeries => {
 
 //Takes a weekly time series and returns an array of objects containing the highest weekly value and date
 //Sorted by date, in order of most recent to furthest
-const getLast52Data = weeklyTimeSeries => {
+const getLast52 = weeklyTimeSeries => {
   const sortedKeys = getSortedKeysByDate(weeklyTimeSeries);
   const last52 = [];
   for (let i = 0; i < 52; i++) {
@@ -44,4 +48,4 @@ const getExtremes = last52 => {
   return { lowest, highest };
 };
 
-module.exports = { getExtremes, getLast52Data };
+module.exports = { getCurrentValue, getExtremes, getLast52 };
