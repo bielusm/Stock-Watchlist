@@ -4,3 +4,13 @@ client/docs/assets/bundle.js.map
 server/.env
 mongodb-binaries/
 jsconfig.json
+client/docs/assets/1.bundle.js
+client/docs/assets/1.bundle.js.map
+client/docs/assets/2.bundle.js
+client/docs/assets/2.bundle.js.map
+client/docs/assets/3.bundle.js
+client/docs/assets/3.bundle.js.map
+client/docs/assets/4.bundle.js
+client/docs/assets/4.bundle.js.map
+client/docs/assets/main.bundle.js
+client/docs/assets/main.bundle.js.map

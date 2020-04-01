@@ -4,10 +4,12 @@ module.exports = env => {
   const isProduction = env === 'production';
 
   return {
-    entry: './src/app.js',
+    entry: {
+      main: './src/app.js'
+    },
     output: {
       path: path.join(__dirname, 'docs/assets'),
-      filename: 'bundle.js'
+      filename: '[name].bundle.js'
     },
     module: {
       rules: [

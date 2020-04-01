@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import TopNav from '../layout/TopNav';
-import Login from '../forms/Login';
-import Register from '../forms/Register';
+const Login = lazy(() => import('../forms/Login'));
+const Register = lazy(() => import('../forms/Register'));
 import Alerts from '../layout/Alerts';
-import Dashboard from '../layout/Dashboard';
+const Dashboard = lazy(() => import('../layout/Dashboard'));
 import PrivateRoute from './PrivateRoute';
 
 import { Container } from 'reactstrap';
