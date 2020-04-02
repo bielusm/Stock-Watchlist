@@ -7,3 +7,6 @@ export const REMOVE_ALERT = 'REMOVE_ALERT';
 
 // USERS
 export const SET_TOKEN = 'SET_TOKEN';
+
+//Stocks
+export const ADD_STOCK_DATA = 'ADD_STOCK_DATA';

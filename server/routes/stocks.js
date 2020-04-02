@@ -35,8 +35,9 @@ router.get('/:symbol', [auth], async (req, res) => {
       throw new Error(result.data['Error Message']);
 
     const currentValue = getCurrentValue(result.data['Global Quote']);
-
-    return res.status(200).send({ currentValue, stats, last52 });
+    const statData = {};
+    statData[symbol] = { currentValue, stats, last52 };
+    return res.status(200).send(statData);
   } catch (error) {
     const { message } = error;
     if (message.includes('5 calls per minute'))
