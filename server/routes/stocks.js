@@ -42,7 +42,7 @@ router.get('/:symbol', [auth], async (req, res) => {
     const { message } = error;
     if (message.includes('5 calls per minute'))
       return res
-        .status('400')
+        .status('429')
         .json({ errors: [{ msg: 'Too many api calls' }] });
     if (message.includes('Invalid API call'))
       return res

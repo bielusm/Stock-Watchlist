@@ -97,7 +97,7 @@ describe('stocks route', () => {
               .get(url)
               .set('x-auth-token', token)
               .send(data)
-              .expect(400);
+              .expect(429);
             break;
         }
         let errors = res.body.errors;
