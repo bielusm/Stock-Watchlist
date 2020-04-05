@@ -14,7 +14,7 @@ import { getStockStats } from '../../actions/stocks';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const LookUpSymbol = ({ getStockStats, stocks }) => {
+export const LookUpSymbol = ({ getStockStats, stocks }) => {
   const [symbol, setSymbol] = useState('');
 
   const onChange = (e) => {
