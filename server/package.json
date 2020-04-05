@@ -21,8 +21,8 @@
     "mongoose": "^5.9.6"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.18.1",
     "mongodb-memory-server-core": "^6.5.0",
-    "moxios": "^0.4.0",
     "supertest": "^4.0.2"
   }
 }

@@ -14,17 +14,17 @@ const mockStore = configureMockStore([ReduxThunk]);
 
 jest.mock('uuidv4', () => ({
   __esModule: true,
-  uuid: jest.fn(() => 1)
+  uuid: jest.fn(() => 1),
 }));
 
 jest.mock('../../src/util/sleep.js', () => ({
   __esModule: true,
-  sleep: jest.fn().mockResolvedValue()
+  sleep: jest.fn().mockResolvedValue(),
 }));
 
 let store;
 beforeEach(() => {
-  store = mockStore({ stockData: {} });
+  store = mockStore({ user: { token: '12345' } });
 });
 
 afterEach(() => {
@@ -33,7 +33,7 @@ afterEach(() => {
 
 describe('stock action tests', () => {
   describe('getStockStats', () => {
-    test('returns correct data', async done => {
+    test('returns correct data', async (done) => {
       mock.onGet().reply(200, ibm);
       store.dispatch(getStockStats('ibm')).then(() => {
         const actions = store.getActions();
@@ -41,7 +41,7 @@ describe('stock action tests', () => {
         done();
       });
     });
-    test('works on too many requests', async done => {
+    test('works on too many requests', async (done) => {
       mock.onGet().reply(429, { errors: [{ msg: 'Too many api calls' }] });
 
       store.dispatch(getStockStats('ibm')).then(() => {

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const server = require('../../app');
 const { seedUser } = require('./users');
 const User = require('../../models/User');
+const Symbol = require('../../models/Symbol');
 const request = require('supertest');
 
 const connectToDb = async () => {
@@ -9,9 +10,10 @@ const connectToDb = async () => {
     .connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false
+      useFindAndModify: false,
+      useCreateIndex: true,
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       process.exit(1);
     });
@@ -19,9 +21,7 @@ const connectToDb = async () => {
 
 const fillUsers = async () => {
   // Need to go through server for hashed password
-  const res = await request(server)
-    .post('/api/users')
-    .send(seedUser);
+  const res = await request(server).post('/api/users').send(seedUser);
 };
 
 const seedDatabase = async () => {
@@ -39,10 +39,11 @@ const disconnect = async () => {
 
 const clearDatabase = async () => {
   await User.deleteMany({});
+  await Symbol.deleteMany({});
 };
 
 module.exports = {
   seedDatabase,
   connect,
-  disconnect
+  disconnect,
 };

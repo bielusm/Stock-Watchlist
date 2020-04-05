@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const errorFormater = require('./errorFormater');
 const auth = require('../middleware/auth');
 const axios = require('axios');
 const {
   getLast52,
   getExtremes,
-  getCurrentValue
+  getCurrentValue,
 } = require('../stocks/stockCalculations');
+const SymbolModel = require('../models/Symbol');
+const moment = require('moment');
 
 //@route GET api/stocks
 //@desc Get stocks for symbol
@@ -17,6 +17,13 @@ router.get('/:symbol', [auth], async (req, res) => {
   const { ALPHA_VANTAGE_KEY } = process.env;
   const { symbol } = req.params;
   try {
+    //check DB Cache delete if val too old
+    let databaseData = await SymbolModel.findOne({ symbol });
+    if (databaseData) {
+      const { date, stockStats, _id } = databaseData;
+      if (moment().isSame(date, 'day')) return res.status(200).send(stockStats);
+      await SymbolModel.findByIdAndDelete({ _id });
+    }
     let result = await axios.get(
       `https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
     );
@@ -37,6 +44,12 @@ router.get('/:symbol', [auth], async (req, res) => {
     const currentValue = getCurrentValue(result.data['Global Quote']);
     const statData = {};
     statData[symbol] = { currentValue, stats, last52 };
+    let databaseSymbol = new SymbolModel({
+      date: moment.now(),
+      symbol,
+      stockStats: statData,
+    });
+    await databaseSymbol.save();
     return res.status(200).send(statData);
   } catch (error) {
     const { message } = error;
