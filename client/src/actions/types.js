@@ -10,3 +10,5 @@ export const SET_TOKEN = 'SET_TOKEN';
 
 //Stocks
 export const ADD_MISC_STOCK = 'ADD_MISC_STOCK';
+export const ADD_MAPPED_PLACEHOLDER = 'ADD_MAPPED_PLACEHOLDER';
+export const ADD_MAPPED_STOCK = 'ADD_MAPPEDSTOCK';
