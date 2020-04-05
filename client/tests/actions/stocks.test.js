@@ -8,7 +8,7 @@ let mock = new MockAdapter(axios);
 
 import { addAlert } from '../../src/actions/alert';
 import { ibm } from '../fixtures/stats';
-import { ADD_STOCK_DATA } from '../../src/actions/types';
+import { ADD_MISC_STOCK } from '../../src/actions/types';
 
 const mockStore = configureMockStore([ReduxThunk]);
 
@@ -37,7 +37,7 @@ describe('stock action tests', () => {
       mock.onGet().reply(200, ibm);
       store.dispatch(getStockStats('ibm')).then(() => {
         const actions = store.getActions();
-        expect(actions).toEqual([{ type: ADD_STOCK_DATA, payload: ibm }]);
+        expect(actions).toEqual([{ type: ADD_MISC_STOCK, payload: ibm }]);
         done();
       });
     });

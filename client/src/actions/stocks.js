@@ -1,5 +1,5 @@
 import { setAlert } from './alert';
-import { ADD_STOCK_DATA } from './types';
+import { ADD_MISC_STOCK } from './types';
 import { sendRequest } from '../util/requests';
 
 export const getStockStats = (symbol) => async (dispatch, getState) => {
@@ -10,7 +10,7 @@ export const getStockStats = (symbol) => async (dispatch, getState) => {
       headers: { 'x-auth-token': getState().user.token },
     };
     let res = await sendRequest(url, config);
-    dispatch({ type: ADD_STOCK_DATA, payload: res.data });
+    dispatch({ type: ADD_MISC_STOCK, payload: res.data });
   } catch (error) {
     if (error.response) {
       error.response.data.errors.forEach((error) => {

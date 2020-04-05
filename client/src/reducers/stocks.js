@@ -1,15 +1,15 @@
-import { RESET_STATE, ADD_STOCK_DATA } from '../actions/types';
+import { RESET_STATE, ADD_MISC_STOCK } from '../actions/types';
 export const initialState = {
-  stockData: {},
+  miscStocks: {},
 };
 
 const stocks = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case ADD_STOCK_DATA:
+    case ADD_MISC_STOCK:
       return {
         ...state,
-        stockData: { ...state.stockData, ...payload },
+        miscStocks: { ...state.stockData, ...payload },
       };
     case RESET_STATE:
       return {
