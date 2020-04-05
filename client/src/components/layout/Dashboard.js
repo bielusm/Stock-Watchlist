@@ -1,9 +1,11 @@
 import React from 'react';
-import LookUpSymbol from '../forms/LookUpSymbol';
+import LookUpSymbol from '../modules/LookUpSymbol';
+import WatchList from '../modules/WatchList.js';
 
 export const Dashboard = (props) => {
   return (
     <>
+      <WatchList />
       <LookUpSymbol />
     </>
   );
