@@ -3,6 +3,7 @@ import {
   RESET_STATE,
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
+  ADD_MAPPED_STOCK,
 } from '../../src/actions/types';
 import { aaa, ibm } from '../fixtures/stats';
 describe('stocks reducer tests', () => {
@@ -31,6 +32,26 @@ describe('stocks reducer tests', () => {
         ibm: { loading: true },
         aaa: { loading: true },
       })
+    );
+  });
+
+  test(ADD_MAPPED_STOCK, () => {
+    let res = stocksReducer(undefined, {
+      type: ADD_MAPPED_PLACEHOLDER,
+      payload: 'ibm',
+    });
+    res = stocksReducer(res, {
+      type: ADD_MAPPED_PLACEHOLDER,
+      payload: 'aaa',
+    });
+
+    res = stocksReducer(res, {
+      type: ADD_MAPPED_STOCK,
+      payload: ibm,
+    });
+
+    expect(res.mappedStocks).toEqual(
+      expect.objectContaining({ ...ibm, aaa: { loading: true } })
     );
   });
 });

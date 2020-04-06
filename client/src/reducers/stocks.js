@@ -2,6 +2,7 @@ import {
   RESET_STATE,
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
+  ADD_MAPPED_STOCK,
 } from '../actions/types';
 export const initialState = {
   miscStocks: {},
@@ -15,9 +16,16 @@ const stocks = (state = initialState, action) => {
       const newObj = {};
       newObj[payload] = { loading: true };
       return {
+        ...state,
         mappedStocks: { ...state.mappedStocks, ...newObj },
       };
     }
+
+    case ADD_MAPPED_STOCK:
+      return {
+        ...state,
+        mappedStocks: { ...state.mappedStocks, ...payload },
+      };
 
     case ADD_MISC_STOCK:
       return {
