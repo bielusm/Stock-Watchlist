@@ -1,5 +1,7 @@
 import React from 'react';
 import { Table, Card, CardHeader, CardBody } from 'reactstrap';
+import WatchListEntry from './WatchListEntry';
+import { ibm } from '../../../tests/fixtures/stats';
 export const WatchList = () => {
   return (
     <>
@@ -13,10 +15,12 @@ export const WatchList = () => {
                 <th>Current Value</th>
                 <th>52 Week Max</th>
                 <th>52 Week Min</th>
-                <th></th>
+                <th>Delete</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              <WatchListEntry stock={ibm} />
+            </tbody>
           </Table>
         </CardBody>
       </Card>
