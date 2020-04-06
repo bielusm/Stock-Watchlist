@@ -78,6 +78,6 @@ LookUpSymbol.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  stocks: state.stocks.stockData,
+  stocks: state.stocks.miscStocks,
 });
 export default connect(mapStateToProps, { getStockStats })(LookUpSymbol);
