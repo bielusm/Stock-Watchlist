@@ -117,7 +117,7 @@ describe('stocks route', () => {
         .set('x-auth-token', token)
         .expect(200);
       expect(response.body).toMatchSnapshot({});
-      expect(response.body.ibm.last52).toHaveLength(52);
+      expect(response.body.last52).toHaveLength(52);
       done();
     });
     test('should return warning with bad symbol', async (done) => {

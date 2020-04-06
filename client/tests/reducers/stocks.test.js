@@ -5,7 +5,7 @@ import {
   ADD_MAPPED_PLACEHOLDER,
   ADD_MAPPED_STOCK,
 } from '../../src/actions/types';
-import { aaa, ibm } from '../fixtures/stats';
+import { AAPL, ibm } from '../fixtures/stats';
 describe('stocks reducer tests', () => {
   test('RESET_STATE', () => {
     expect(
@@ -15,8 +15,10 @@ describe('stocks reducer tests', () => {
   test(ADD_MISC_STOCK, () => {
     let res = stocksReducer(undefined, { type: ADD_MISC_STOCK, payload: ibm });
     expect(res.miscStocks).toEqual(expect.objectContaining({ ...ibm }));
-    res = stocksReducer(res, { type: ADD_MISC_STOCK, payload: aaa });
-    expect(res.miscStocks).toEqual(expect.objectContaining({ ...ibm, ...aaa }));
+    res = stocksReducer(res, { type: ADD_MISC_STOCK, payload: AAPL });
+    expect(res.miscStocks).toEqual(
+      expect.objectContaining({ ...ibm, ...AAPL })
+    );
   });
   test(ADD_MAPPED_PLACEHOLDER, () => {
     let res = stocksReducer(undefined, {
@@ -26,11 +28,11 @@ describe('stocks reducer tests', () => {
     expect(res.mappedStocks).toEqual(
       expect.objectContaining({ ibm: { loading: true } })
     );
-    res = stocksReducer(res, { type: ADD_MAPPED_PLACEHOLDER, payload: 'aaa' });
+    res = stocksReducer(res, { type: ADD_MAPPED_PLACEHOLDER, payload: 'AAPL' });
     expect(res.mappedStocks).toEqual(
       expect.objectContaining({
         ibm: { loading: true },
-        aaa: { loading: true },
+        AAPL: { loading: true },
       })
     );
   });
@@ -42,7 +44,7 @@ describe('stocks reducer tests', () => {
     });
     res = stocksReducer(res, {
       type: ADD_MAPPED_PLACEHOLDER,
-      payload: 'aaa',
+      payload: 'AAPL',
     });
 
     res = stocksReducer(res, {
@@ -51,7 +53,7 @@ describe('stocks reducer tests', () => {
     });
 
     expect(res.mappedStocks).toEqual(
-      expect.objectContaining({ ...ibm, aaa: { loading: true } })
+      expect.objectContaining({ ...ibm, AAPL: { loading: true } })
     );
   });
 });

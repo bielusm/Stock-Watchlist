@@ -42,15 +42,14 @@ router.get('/:symbol', [auth], async (req, res) => {
       throw new Error(result.data['Error Message']);
 
     const currentValue = getCurrentValue(result.data['Global Quote']);
-    const statData = {};
-    statData[symbol] = { currentValue, stats, last52 };
+    const stockStats = { symbol, currentValue, stats, last52 };
     let databaseSymbol = new SymbolModel({
       date: moment.now(),
       symbol,
-      stockStats: statData,
+      stockStats,
     });
     await databaseSymbol.save();
-    return res.status(200).send(statData);
+    return res.status(200).send(stockStats);
   } catch (error) {
     const { message } = error;
     if (message.includes('5 calls per minute'))
