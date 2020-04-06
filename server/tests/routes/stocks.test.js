@@ -5,6 +5,7 @@ const {
   connect,
 } = require('../fixtures/seedDatabase');
 const SymbolModel = require('../../models/Symbol');
+const UserModel = require('../../models/User');
 
 let token = '';
 
@@ -41,6 +42,11 @@ describe('stocks route', () => {
     test('should give proper error', async (done) => {
       const testRoutes = [
         { url: '/api/stocks/ibm', method: 'get', data: undefined },
+        {
+          url: '/api/stocks/watchlist',
+          method: 'post',
+          data: { symbol: 'ibm' },
+        },
       ];
       for (const route of testRoutes) {
         const { url, method, data } = route;
@@ -54,6 +60,13 @@ describe('stocks route', () => {
               .send(data)
               .expect(401);
             break;
+          case 'post':
+            res[0] = await request(app).post(url).send(data).expect(400);
+            res[1] = await request(app)
+              .post(url)
+              .set('x-auth-token', 'adhwdawdad')
+              .send(data)
+              .expect(401);
         }
 
         let errors = res[0].body.errors;
@@ -185,6 +198,64 @@ describe('stocks route', () => {
         .set('x-auth-token', token);
       const newSymbolData = await SymbolModel.findOne({ symbol });
       expect(newSymbolData).not.toEqual(symbolData);
+      done();
+    });
+  });
+
+  describe('POST api/stocks/watchlist', () => {
+    test('should add symbol to watchlist', async (done) => {
+      let watchlist = (await UserModel.findOne({ email: seedUser.email }))
+        .watchlist;
+      expect(watchlist).toHaveLength(0);
+      let res = await request(app)
+        .post('/api/stocks/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'ibm' });
+      watchlist = Array.from(
+        (await UserModel.findOne({ email: seedUser.email })).watchlist
+      );
+
+      expect(watchlist).toHaveLength(1);
+      expect(watchlist).toEqual(['ibm']);
+
+      res = await request(app)
+        .post('/api/stocks/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'aaa' });
+      watchlist = Array.from(
+        (await UserModel.findOne({ email: seedUser.email })).watchlist
+      );
+      expect(res.text).toEqual('Symbol added to watchlist');
+      expect(watchlist).toHaveLength(2);
+      expect(watchlist).toEqual(['ibm', 'aaa']);
+      done();
+    });
+
+    test('Ignores duplicate value', async (done) => {
+      let watchlist = (await UserModel.findOne({ email: seedUser.email }))
+        .watchlist;
+      expect(watchlist).toHaveLength(0);
+      let res = await request(app)
+        .post('/api/stocks/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'ibm' });
+      watchlist = Array.from(
+        (await UserModel.findOne({ email: seedUser.email })).watchlist
+      );
+
+      expect(watchlist).toHaveLength(1);
+      expect(watchlist).toEqual(['ibm']);
+
+      res = await request(app)
+        .post('/api/stocks/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'ibm' });
+      watchlist = Array.from(
+        (await UserModel.findOne({ email: seedUser.email })).watchlist
+      );
+      expect(watchlist).toHaveLength(1);
+      expect(watchlist).toEqual(['ibm']);
+      expect(res.text).toEqual('Symbol already exists');
       done();
     });
   });
