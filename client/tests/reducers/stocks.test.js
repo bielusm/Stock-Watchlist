@@ -26,13 +26,13 @@ describe('stocks reducer tests', () => {
       payload: 'ibm',
     });
     expect(res.mappedStocks).toEqual(
-      expect.objectContaining({ ibm: { loading: true } })
+      expect.objectContaining({ ibm: { loading: true, symbol: 'ibm' } })
     );
     res = stocksReducer(res, { type: ADD_MAPPED_PLACEHOLDER, payload: 'AAPL' });
     expect(res.mappedStocks).toEqual(
       expect.objectContaining({
-        ibm: { loading: true },
-        AAPL: { loading: true },
+        ibm: { loading: true, symbol: 'ibm' },
+        AAPL: { loading: true, symbol: 'AAPL' },
       })
     );
   });
@@ -53,7 +53,10 @@ describe('stocks reducer tests', () => {
     });
 
     expect(res.mappedStocks).toEqual(
-      expect.objectContaining({ ...ibm, AAPL: { loading: true } })
+      expect.objectContaining({
+        ...ibm,
+        AAPL: { symbol: 'AAPL', loading: true },
+      })
     );
   });
 });

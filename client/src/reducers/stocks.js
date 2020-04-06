@@ -14,7 +14,7 @@ const stocks = (state = initialState, action) => {
   switch (type) {
     case ADD_MAPPED_PLACEHOLDER: {
       const newObj = {};
-      newObj[payload] = { loading: true };
+      newObj[payload] = { symbol: payload, loading: true };
       return {
         ...state,
         mappedStocks: { ...state.mappedStocks, ...newObj },
