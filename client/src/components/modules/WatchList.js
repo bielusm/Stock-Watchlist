@@ -22,6 +22,7 @@ export const WatchList = () => {
             <tbody>
               <WatchListEntry stock={ibm} />
               <WatchListEntry stock={AAPL} />
+              <WatchListEntry stock={{ symbol: 'aaa', loading: true }} />
             </tbody>
           </Table>
         </CardBody>

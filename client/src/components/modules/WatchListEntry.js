@@ -2,13 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Button } from 'reactstrap';
 
-export const WatchListEntry = ({
-  stock: {
-    symbol,
+export const WatchListEntry = ({ stock }) => {
+  const { loading, symbol } = stock;
+  if (loading)
+    return (
+      <tr>
+        <th>{symbol}</th>
+        <th>Loading</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    );
+
+  const {
     currentValue,
     stats: { highest, lowest },
-  },
-}) => {
+  } = stock;
   return (
     <>
       <tr>
