@@ -11,7 +11,7 @@ const SymbolModel = require('../models/Symbol');
 const moment = require('moment');
 
 //@route GET api/stocks
-//@desc Get stocks for symbol
+//@desc Get stock stats for symbol
 //@access Private
 router.get('/:symbol', [auth], async (req, res) => {
   const { ALPHA_VANTAGE_KEY } = process.env;

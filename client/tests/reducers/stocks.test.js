@@ -4,6 +4,7 @@ import {
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
   ADD_MAPPED_STOCK,
+  REMOVE_MAPPED_STOCK,
 } from '../../src/actions/types';
 import { AAPL, ibm } from '../fixtures/stats';
 describe('stocks reducer tests', () => {
@@ -52,11 +53,33 @@ describe('stocks reducer tests', () => {
       payload: ibm,
     });
 
-    expect(res.mappedStocks).toEqual(
-      expect.objectContaining({
-        ...ibm,
-        AAPL: { symbol: 'AAPL', loading: true },
-      })
-    );
+    expect(res.mappedStocks).toEqual({
+      ibm,
+      AAPL: { symbol: 'AAPL', loading: true },
+    });
+  });
+  test(REMOVE_MAPPED_STOCK, () => {
+    let res = stocksReducer(undefined, {
+      type: ADD_MAPPED_PLACEHOLDER,
+      payload: 'ibm',
+    });
+    res = stocksReducer(res, {
+      type: ADD_MAPPED_PLACEHOLDER,
+      payload: 'AAPL',
+    });
+
+    res = stocksReducer(res, {
+      type: ADD_MAPPED_STOCK,
+      payload: ibm,
+    });
+
+    res = stocksReducer(res, {
+      type: REMOVE_MAPPED_STOCK,
+      payload: 'AAPL',
+    });
+
+    expect(res.mappedStocks).toEqual({
+      ibm,
+    });
   });
 });

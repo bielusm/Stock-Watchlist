@@ -3,11 +3,13 @@ import {
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
   ADD_MAPPED_STOCK,
+  REMOVE_MAPPED_STOCK,
 } from '../actions/types';
 export const initialState = {
   miscStocks: {},
   mappedStocks: {},
 };
+import { omit } from 'lodash';
 
 const stocks = (state = initialState, action) => {
   const { type, payload } = action;
@@ -22,9 +24,19 @@ const stocks = (state = initialState, action) => {
     }
 
     case ADD_MAPPED_STOCK:
+      const key = payload.symbol;
       return {
         ...state,
-        mappedStocks: { ...state.mappedStocks, ...payload },
+        mappedStocks: {
+          ...state.mappedStocks,
+          ...{ [payload.symbol]: payload },
+        },
+      };
+
+    case REMOVE_MAPPED_STOCK:
+      return {
+        ...state,
+        mappedStocks: omit(state.mappedStocks, payload),
       };
 
     case ADD_MISC_STOCK:
