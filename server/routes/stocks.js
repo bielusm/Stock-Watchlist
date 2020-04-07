@@ -13,6 +13,27 @@ const moment = require('moment');
 const { check, validationResult } = require('express-validator');
 const errorFormater = require('./errorFormater');
 
+//@route DELETE api/stocks/watchlist/:symbol
+//@desc Delete a stock from the watchlist
+//@access Private
+router.delete('/watchlist/:symbol', [auth], async (req, res) => {
+  try {
+    const { symbol } = req.params;
+
+    //Get user by ID
+    const user = await User.findById(req.id, '-password');
+    if (!user)
+      return res.status(400).json({ errors: [{ msg: 'Invalid JWT Token' }] });
+
+    user.watchlist = user.watchlist.filter((stock) => stock !== symbol);
+    await user.save();
+    return res.status(200).send(`${symbol} removed from watchlist`);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ errors: [{ msg: 'Server Error' }] });
+  }
+});
+
 //@route POST api/stocks/watchlist
 //@desc Add new stock to users watchlist
 //@access Private
