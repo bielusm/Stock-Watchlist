@@ -1,12 +1,30 @@
-import React from 'react';
-import { Table, Card, CardHeader, CardBody } from 'reactstrap';
+import React, { useState } from 'react';
+import { Table, Card, CardHeader, CardBody, Input, Button } from 'reactstrap';
 import WatchListEntry from './WatchListEntry';
 import { ibm, AAPL } from '../../../tests/fixtures/stats';
 export const WatchList = () => {
+  const [newSymbol, setNewSymbol] = useState('');
+
+  const onChange = (e) => {
+    setNewSymbol(e.target.value);
+  };
+
   return (
     <>
       <Card>
-        <CardHeader tag="h4"> WatchList </CardHeader>
+        <CardHeader>
+          <h4 className="d-inline-block">WatchList</h4>
+          <div className="inputSection float-right d-inline-block d-flex justify-content-end">
+            <Input
+              value={newSymbol}
+              className="d-inline-block w-75"
+              onChange={(e) => onChange(e)}
+            ></Input>
+            <Button color="link">
+              <i className="fas fa-plus fa-lg"></i>
+            </Button>
+          </div>
+        </CardHeader>
         <CardBody>
           <Table>
             <thead>
