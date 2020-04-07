@@ -12,6 +12,7 @@ app.use(express.json());
 //Define Routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/stocks', require('./routes/stocks'));
+app.use('/api/watchlist', require('./routes/watchlist'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'client', 'docs', 'index.html'));
