@@ -6,7 +6,27 @@ import {
 } from './types';
 import { sendRequest } from '../util/requests';
 
-export const deleteFromWatchList = (symbol) => async (dispatch, getState) => {
+export const getWatchlist = () => async (dispatch, getState) => {
+  try {
+    const url = `/api/watchlist`;
+    const config = {
+      method: 'get',
+      headers: { 'x-auth-token': getState().user.token },
+    };
+    let res = await sendRequest(url, config);
+    res.data.forEach((symbol) => {
+      dispatch({ type: ADD_MAPPED_PLACEHOLDER, payload: symbol });
+    });
+  } catch (error) {
+    if (error.response) {
+      error.response.data.errors.forEach((error) => {
+        dispatch(setAlert(error.msg, 'danger'));
+      });
+    } else console.error(error);
+  }
+};
+
+export const deleteFromWatchlist = (symbol) => async (dispatch, getState) => {
   try {
     const url = `/api/watchlist/${symbol}`;
     const config = {

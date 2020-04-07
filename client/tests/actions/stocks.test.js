@@ -1,7 +1,8 @@
 import {
   getStockStats,
   addToWatchlist,
-  deleteFromWatchList,
+  deleteFromWatchlist,
+  getWatchlist,
 } from '../../src/actions/stocks';
 import configureMockStore from 'redux-mock-store';
 import ReduxThunk from 'redux-thunk';
@@ -46,7 +47,8 @@ describe('stock action tests', () => {
       const functions = [
         () => getStockStats('ibm'),
         () => addToWatchlist('ibm'),
-        () => deleteFromWatchList('ibm'),
+        () => deleteFromWatchlist('ibm'),
+        getWatchlist,
       ];
       for (const func of functions) {
         store = mockStore({ user: { token: '12345' } });
@@ -92,9 +94,33 @@ describe('stock action tests', () => {
   describe('deleteFromWatchList', () => {
     test('should call action', async (done) => {
       mock.onDelete().reply(200, 'ibm removed from watchlist ');
-      store.dispatch(deleteFromWatchList('ibm')).then(() => {
+      store.dispatch(deleteFromWatchlist('ibm')).then(() => {
         const actions = store.getActions();
         const expected = [{ type: REMOVE_MAPPED_STOCK, payload: 'ibm' }];
+        expect(actions).toEqual(expected);
+        done();
+      });
+    });
+  });
+
+  describe('getWatchlist', () => {
+    test('should not call any actions', async (done) => {
+      mock.onGet().reply(200, []);
+      store.dispatch(getWatchlist()).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([]);
+        done();
+      });
+    });
+    test('should call action for each watchlist item', async (done) => {
+      mock.onGet().reply(200, ['ibm', 'aaa', 'AAPL']);
+      store.dispatch(getWatchlist()).then(() => {
+        const actions = store.getActions();
+        const expected = [
+          { type: ADD_MAPPED_PLACEHOLDER, payload: 'ibm' },
+          { type: ADD_MAPPED_PLACEHOLDER, payload: 'aaa' },
+          { type: ADD_MAPPED_PLACEHOLDER, payload: 'AAPL' },
+        ];
         expect(actions).toEqual(expected);
         done();
       });
