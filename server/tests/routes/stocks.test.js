@@ -258,5 +258,14 @@ describe('stocks route', () => {
       expect(res.text).toEqual('Symbol already exists');
       done();
     });
+    test('sends proper validation errors', async (done) => {
+      res = await request(app)
+        .post('/api/stocks/watchlist')
+        .set('x-auth-token', token);
+      const errors = res.body.errors;
+      expect(errors.length).toEqual(1);
+      expect(errors[0].msg).toEqual('symbol is required');
+      done();
+    });
   });
 });
