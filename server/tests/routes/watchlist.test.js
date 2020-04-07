@@ -46,6 +46,7 @@ describe('watchlist tests', () => {
           data: { symbol: 'ibm' },
         },
         { url: '/api/watchlist/ibm', method: 'delete', data: undefined },
+        { url: '/api/watchlist', method: 'get', data: undefined },
       ];
       testAuth(testRoutes, done);
     });
@@ -179,6 +180,34 @@ describe('watchlist tests', () => {
       expect(watchlist).toHaveLength(3);
       expect(watchlist).toEqual(['ibm', 'aaa', 'AAPL']);
 
+      done();
+    });
+  });
+
+  describe('GET api/watchlist', () => {
+    test('should return empty array', async (done) => {
+      let res = await request(app)
+        .get('/api/watchlist')
+        .set('x-auth-token', token);
+      expect(res.body).toEqual([]);
+      done();
+    });
+    test('should return the watchlist', async (done) => {
+      let res = await request(app)
+        .post('/api/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'ibm' });
+      res = await request(app)
+        .post('/api/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'aaa' });
+      res = await request(app)
+        .post('/api/watchlist')
+        .set('x-auth-token', token)
+        .send({ symbol: 'AAPL' });
+
+      res = await request(app).get('/api/watchlist').set('x-auth-token', token);
+      expect(res.body).toEqual(['ibm', 'aaa', 'AAPL']);
       done();
     });
   });

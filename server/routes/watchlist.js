@@ -5,6 +5,23 @@ const User = require('../models/User.js');
 const { check, validationResult } = require('express-validator');
 const errorFormater = require('./errorFormater');
 
+//@route GET api/watchlist
+//@desc Get the watchlist
+//@access Private
+router.get('/', [auth], async (req, res) => {
+  try {
+    //Get user by ID
+    const user = await User.findById(req.id, '-password');
+    if (!user)
+      return res.status(400).json({ errors: [{ msg: 'Invalid JWT Token' }] });
+
+    return res.status(200).json(user.watchlist);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ errors: [{ msg: 'Server Error' }] });
+  }
+});
+
 //@route DELETE api/watchlist/:symbol
 //@desc Delete a stock from the watchlist
 //@access Private
