@@ -5,6 +5,7 @@ import {
   addToWatchlist,
   getWatchlist,
   getStockStats,
+  getStockStatsForAllStocks,
 } from '../../actions/stocks';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -14,6 +15,7 @@ export const WatchList = ({
   addToWatchlist,
   getWatchlist,
   getStockStats,
+  getStockStatsForAllStocks,
   loading,
 }) => {
   useEffect(() => {
@@ -21,11 +23,8 @@ export const WatchList = ({
   }, []);
 
   useEffect(() => {
-    const keys = Object.keys(mappedStocks);
-    if (!loading && keys.length !== 0) {
-      for (const key of keys) {
-        getStockStats(mappedStocks[key].symbol, false);
-      }
+    if (!loading) {
+      getStockStatsForAllStocks(mappedStocks);
     }
   }, [loading]);
 
@@ -92,6 +91,9 @@ WatchList.propTypes = {
   mappedStocks: PropTypes.object.isRequired,
   addToWatchlist: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  getStockStatsForAllStocks: PropTypes.func.isRequired,
+  getStockStats: PropTypes.func.isRequired,
+  getWatchlist: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -103,4 +105,5 @@ export default connect(mapStateToProps, {
   addToWatchlist,
   getWatchlist,
   getStockStats,
+  getStockStatsForAllStocks,
 })(WatchList);

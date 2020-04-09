@@ -7,7 +7,7 @@ export const sendRequest = async (url, config, iteration = 0) => {
     return res;
   } catch (error) {
     if (error.response) {
-      if (error.response.status === 429 && iteration < 1) {
+      if (error.response.status === 429 && iteration < 3) {
         await sleep(60000);
         return await sendRequest(url, config, ++iteration);
       }

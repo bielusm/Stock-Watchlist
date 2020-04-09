@@ -7,6 +7,7 @@ describe('WatchList tests', () => {
   let addToWatchlist = jest.fn();
   let getWatchlist = jest.fn();
   let getStockStats = jest.fn();
+  let getStockStatsForAllStocks = jest.fn();
   let stocks = {};
   const value = 'ibm';
 
@@ -21,6 +22,7 @@ describe('WatchList tests', () => {
         addToWatchlist={addToWatchlist}
         getWatchlist={getWatchlist}
         getStockStats={getStockStats}
+        getStockStatsForAllStocks={getStockStatsForAllStocks}
         loading={true}
       />
     );
@@ -47,14 +49,15 @@ describe('WatchList tests', () => {
         addToWatchlist={addToWatchlist}
         getWatchlist={getWatchlist}
         getStockStats={getStockStats}
+        getStockStatsForAllStocks={getStockStatsForAllStocks}
         loading={false}
       />
     );
     const keys = Object.keys(stocks);
     for (const key of keys) {
-      expect(getStockStats).toHaveBeenCalledWith(key, false);
+      expect(getStockStatsForAllStocks).toHaveBeenCalledWith(stocks);
     }
-    expect(getStockStats).toHaveBeenCalledTimes(keys.length);
+    expect(getStockStatsForAllStocks).toHaveBeenCalledTimes(1);
   });
 
   test('should call getWatchlist once', () => {
@@ -64,6 +67,7 @@ describe('WatchList tests', () => {
         addToWatchlist={addToWatchlist}
         getWatchlist={getWatchlist}
         getStockStats={getStockStats}
+        getStockStatsForAllStocks={getStockStatsForAllStocks}
         loading={true}
       />
     );
