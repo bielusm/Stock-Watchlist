@@ -9,6 +9,29 @@ import {
 } from './types';
 import { sendRequest } from '../util/requests';
 
+export const getStockStatsForAllStocks = (stocks) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    for (const key of Object.keys(stocks)) {
+      const url = `/api/stocks/${stocks[key].symbol}`;
+      const config = {
+        method: 'get',
+        headers: { 'x-auth-token': getState().user.token },
+      };
+      let res = await sendRequest(url, config);
+      dispatch({ type: ADD_MAPPED_STOCK, payload: res.data });
+    }
+  } catch (error) {
+    if (error.response) {
+      error.response.data.errors.forEach((error) => {
+        dispatch(setAlert(error.msg, 'danger'));
+      });
+    } else console.error(error);
+  }
+};
+
 export const getWatchlist = () => async (dispatch, getState) => {
   dispatch({ type: MAPPED_STOCK_LOADING });
   try {

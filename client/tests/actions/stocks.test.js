@@ -3,6 +3,7 @@ import {
   addToWatchlist,
   deleteFromWatchlist,
   getWatchlist,
+  getStockStatsForAllStocks,
 } from '../../src/actions/stocks';
 import configureMockStore from 'redux-mock-store';
 import ReduxThunk from 'redux-thunk';
@@ -12,13 +13,14 @@ const MockAdapter = require('axios-mock-adapter');
 let mock = new MockAdapter(axios);
 
 import { addAlert } from '../../src/actions/alert';
-import { ibm } from '../fixtures/stats';
+import { ibm, AAPL } from '../fixtures/stats';
 import {
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
   REMOVE_MAPPED_STOCK,
   MAPPED_STOCK_LOADING,
   MAPPED_STOCK_LOADED,
+  ADD_MAPPED_STOCK,
 } from '../../src/actions/types';
 
 const mockStore = configureMockStore([ReduxThunk]);
@@ -51,6 +53,11 @@ describe('stock action tests', () => {
         () => addToWatchlist('ibm'),
         () => deleteFromWatchlist('ibm'),
         getWatchlist,
+        () =>
+          getStockStatsForAllStocks({
+            ibm: { loading: true, symbol: 'ibm' },
+            AAPL: { loading: true, symbol: 'AAPL' },
+          }),
       ];
       for (const func of functions) {
         store = mockStore({ user: { token: '12345' } });
@@ -129,6 +136,32 @@ describe('stock action tests', () => {
           { type: MAPPED_STOCK_LOADED },
         ];
         expect(actions).toEqual(expected);
+        done();
+      });
+    });
+  });
+
+  describe('getStockStatsForAllStocks', () => {
+    test('should get data for each stock and call action', async (done) => {
+      mock.onGet().replyOnce(200, ibm).onGet().replyOnce(200, AAPL);
+      const stocks = {
+        ibm: { loading: true, symbol: 'ibm' },
+        AAPL: { loading: true, symbol: 'AAPL' },
+      };
+      store.dispatch(getStockStatsForAllStocks(stocks)).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([
+          { type: ADD_MAPPED_STOCK, payload: ibm },
+          { type: ADD_MAPPED_STOCK, payload: AAPL },
+        ]);
+        done();
+      });
+    });
+
+    test('should call nothing when empty array given', async (done) => {
+      store.dispatch(getStockStatsForAllStocks([])).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([]);
         done();
       });
     });
