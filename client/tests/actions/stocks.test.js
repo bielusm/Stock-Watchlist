@@ -17,6 +17,8 @@ import {
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
   REMOVE_MAPPED_STOCK,
+  MAPPED_STOCK_LOADING,
+  MAPPED_STOCK_LOADED,
 } from '../../src/actions/types';
 
 const mockStore = configureMockStore([ReduxThunk]);
@@ -55,7 +57,7 @@ describe('stock action tests', () => {
         await store.dispatch(func());
         const actions = store.getActions();
         const expected = [addAlert(1, 'Server Error', 'danger')];
-        expect(actions).toEqual(expected);
+        expect(actions).toEqual(expect.arrayContaining(expected));
       }
       done();
     });
@@ -104,11 +106,14 @@ describe('stock action tests', () => {
   });
 
   describe('getWatchlist', () => {
-    test('should not call any actions', async (done) => {
+    test('should only call loading actions', async (done) => {
       mock.onGet().reply(200, []);
       store.dispatch(getWatchlist()).then(() => {
         const actions = store.getActions();
-        expect(actions).toEqual([]);
+        expect(actions).toEqual([
+          { type: MAPPED_STOCK_LOADING },
+          { type: MAPPED_STOCK_LOADED },
+        ]);
         done();
       });
     });
@@ -117,9 +122,11 @@ describe('stock action tests', () => {
       store.dispatch(getWatchlist()).then(() => {
         const actions = store.getActions();
         const expected = [
+          { type: MAPPED_STOCK_LOADING },
           { type: ADD_MAPPED_PLACEHOLDER, payload: 'ibm' },
           { type: ADD_MAPPED_PLACEHOLDER, payload: 'aaa' },
           { type: ADD_MAPPED_PLACEHOLDER, payload: 'AAPL' },
+          { type: MAPPED_STOCK_LOADED },
         ];
         expect(actions).toEqual(expected);
         done();

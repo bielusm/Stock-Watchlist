@@ -3,10 +3,14 @@ import {
   ADD_MISC_STOCK,
   ADD_MAPPED_PLACEHOLDER,
   REMOVE_MAPPED_STOCK,
+  MAPPED_STOCK_LOADING,
+  MAPPED_STOCK_LOADED,
+  ADD_MAPPED_STOCK,
 } from './types';
 import { sendRequest } from '../util/requests';
 
 export const getWatchlist = () => async (dispatch, getState) => {
+  dispatch({ type: MAPPED_STOCK_LOADING });
   try {
     const url = `/api/watchlist`;
     const config = {
@@ -17,6 +21,7 @@ export const getWatchlist = () => async (dispatch, getState) => {
     res.data.forEach((symbol) => {
       dispatch({ type: ADD_MAPPED_PLACEHOLDER, payload: symbol });
     });
+    dispatch({ type: MAPPED_STOCK_LOADED });
   } catch (error) {
     if (error.response) {
       error.response.data.errors.forEach((error) => {
@@ -63,7 +68,10 @@ export const addToWatchlist = (symbol) => async (dispatch, getState) => {
   }
 };
 
-export const getStockStats = (symbol) => async (dispatch, getState) => {
+export const getStockStats = (symbol, misc = true) => async (
+  dispatch,
+  getState
+) => {
   try {
     const url = `/api/stocks/${symbol}`;
     const config = {
@@ -71,7 +79,8 @@ export const getStockStats = (symbol) => async (dispatch, getState) => {
       headers: { 'x-auth-token': getState().user.token },
     };
     let res = await sendRequest(url, config);
-    dispatch({ type: ADD_MISC_STOCK, payload: res.data });
+    if (misc) dispatch({ type: ADD_MISC_STOCK, payload: res.data });
+    else dispatch({ type: ADD_MAPPED_STOCK, payload: res.data });
   } catch (error) {
     if (error.response) {
       error.response.data.errors.forEach((error) => {

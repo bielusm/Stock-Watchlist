@@ -4,24 +4,38 @@ import {
   ADD_MAPPED_PLACEHOLDER,
   ADD_MAPPED_STOCK,
   REMOVE_MAPPED_STOCK,
+  MAPPED_STOCK_LOADING,
+  MAPPED_STOCK_LOADED,
 } from '../actions/types';
 export const initialState = {
   miscStocks: {},
   mappedStocks: {},
+  mappedStocksLoading: false,
 };
 import { omit } from 'lodash';
 
 const stocks = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case ADD_MAPPED_PLACEHOLDER: {
+    case MAPPED_STOCK_LOADING:
+      return {
+        ...state,
+        mappedStocksLoading: true,
+      };
+
+    case MAPPED_STOCK_LOADED:
+      return {
+        ...state,
+        mappedStocksLoading: false,
+      };
+
+    case ADD_MAPPED_PLACEHOLDER:
       const newObj = {};
       newObj[payload] = { symbol: payload, loading: true };
       return {
         ...state,
         mappedStocks: { ...state.mappedStocks, ...newObj },
       };
-    }
 
     case ADD_MAPPED_STOCK:
       const key = payload.symbol;
@@ -42,7 +56,7 @@ const stocks = (state = initialState, action) => {
     case ADD_MISC_STOCK:
       return {
         ...state,
-        miscStocks: { ...state.miscStocks, ...payload },
+        miscStocks: { ...state.miscStocks, ...{ [payload.symbol]: payload } },
       };
     case RESET_STATE:
       return {

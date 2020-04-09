@@ -14,7 +14,7 @@ const Routes = () => {
   return (
     <>
       <TopNav />
-      <Container className="pt-2">
+      <Container className="pt-2 mx-auto">
         <Alerts />
         <Switch>
           <Route exact path="/login" component={Login} />

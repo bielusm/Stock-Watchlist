@@ -5,21 +5,21 @@ import {
   ADD_MAPPED_PLACEHOLDER,
   ADD_MAPPED_STOCK,
   REMOVE_MAPPED_STOCK,
+  MAPPED_STOCK_LOADED,
+  MAPPED_STOCK_LOADING,
 } from '../../src/actions/types';
 import { AAPL, ibm } from '../fixtures/stats';
 describe('stocks reducer tests', () => {
-  test('RESET_STATE', () => {
+  test(RESET_STATE, () => {
     expect(
       stocksReducer({ miscStocks: { ...ibm } }, { type: RESET_STATE })
     ).toEqual(initialState);
   });
   test(ADD_MISC_STOCK, () => {
     let res = stocksReducer(undefined, { type: ADD_MISC_STOCK, payload: ibm });
-    expect(res.miscStocks).toEqual(expect.objectContaining({ ...ibm }));
+    expect(res.miscStocks).toEqual(expect.objectContaining({ ibm }));
     res = stocksReducer(res, { type: ADD_MISC_STOCK, payload: AAPL });
-    expect(res.miscStocks).toEqual(
-      expect.objectContaining({ ...ibm, ...AAPL })
-    );
+    expect(res.miscStocks).toEqual(expect.objectContaining({ ibm, AAPL }));
   });
   test(ADD_MAPPED_PLACEHOLDER, () => {
     let res = stocksReducer(undefined, {
@@ -81,5 +81,18 @@ describe('stocks reducer tests', () => {
     expect(res.mappedStocks).toEqual({
       ibm,
     });
+  });
+
+  test(MAPPED_STOCK_LOADING, () => {
+    expect(
+      stocksReducer(undefined, { type: MAPPED_STOCK_LOADING })
+        .mappedStocksLoading
+    ).toEqual(true);
+  });
+  test(MAPPED_STOCK_LOADED, () => {
+    let res = stocksReducer(undefined, { type: MAPPED_STOCK_LOADING });
+    expect(
+      stocksReducer(res, { type: MAPPED_STOCK_LOADED }).mappedStocksLoading
+    ).toEqual(false);
   });
 });
