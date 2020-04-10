@@ -38,6 +38,7 @@ export const WatchList = ({
   }, [loading]);
 
   const [newSymbol, setNewSymbol] = useState('');
+  const [exchange, setExchange] = useState('TSE');
 
   const onChange = (e) => {
     setNewSymbol(e.target.value.trim());
@@ -45,7 +46,7 @@ export const WatchList = ({
 
   const onClick = (e) => {
     if (newSymbol) {
-      addToWatchlist(newSymbol);
+      addToWatchlist(exchange + ':' + newSymbol);
       getStockStats(newSymbol, false);
     }
   };
@@ -58,14 +59,17 @@ export const WatchList = ({
           <div className="inputSection float-right d-inline-block d-flex justify-content-end">
             <InputGroup className="w-50">
               <InputGroupAddon addonType="prepend">
-                <Input type="select">
-                  <option>TSE</option>
-                  <option>NYSE</option>
+                <Input
+                  type="select"
+                  value={exchange}
+                  onChange={(e) => setExchange(e.target.value)}
+                >
+                  <option value="TSE">TSE</option>
+                  <option value="NYSE">NYSE</option>
                 </Input>
               </InputGroupAddon>
               <Input
                 placeholder="symbol"
-                data-testid="symbolInput"
                 value={newSymbol}
                 className="d-inline-block"
                 onChange={(e) => onChange(e)}

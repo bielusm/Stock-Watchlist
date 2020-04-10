@@ -27,13 +27,20 @@ describe('WatchList tests', () => {
       />
     );
 
-    const input = screen.getByTestId('symbolInput');
+    const input = screen.getByPlaceholderText('symbol');
     fireEvent.change(input, { target: { value } });
 
     const btn = screen.getByTestId('symbolInputBtn');
     fireEvent.click(btn);
 
-    expect(addToWatchlist).toHaveBeenCalledWith(value);
+    expect(addToWatchlist).toHaveBeenLastCalledWith('TSE:' + value);
+    const select = screen.getByDisplayValue('TSE');
+    fireEvent.change(select, { target: { value: 'NYSE' } });
+
+    fireEvent.change(input, { target: { value } });
+    fireEvent.click(btn);
+
+    expect(addToWatchlist).toHaveBeenLastCalledWith('NYSE:' + value);
   });
 
   test('should call getStockStats for each stock', () => {
