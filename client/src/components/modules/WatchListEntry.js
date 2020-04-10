@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button } from 'reactstrap';
+import { Input, Button, Spinner } from 'reactstrap';
 import { connect } from 'react-redux';
 import { deleteFromWatchlist } from '../../actions/stocks';
 
@@ -40,7 +40,9 @@ export const WatchListEntry = ({ stock, deleteFromWatchlist }) => {
     return (
       <tr>
         <th>{symbol}</th>
-        <th>Loading</th>
+        <th>
+          <Spinner color="primary" />
+        </th>
         <th></th>
         <th></th>
         <th></th>

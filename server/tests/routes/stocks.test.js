@@ -141,6 +141,9 @@ describe('stocks route', () => {
       const symbol = 'ibm';
       const symbolData = await SymbolModel.findOne({ symbol });
 
+      mock
+        .onGet()
+        .replyOnce(200, require('../fixtures/stocks/globalQuoteIbm.json'));
       response = await request(app)
         .get('/api/stocks/ibm')
         .set('x-auth-token', token);

@@ -2,7 +2,7 @@
 
 exports[`stocks route GET /api/stocks returns stock data 1`] = `
 Object {
-  "currentValue": 112.93,
+  "currentValue": "112.93",
   "last52": Array [
     Object {
       "date": "2020-03-27",

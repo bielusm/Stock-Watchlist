@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, CardHeader, CardBody, Input, Button } from 'reactstrap';
+import {
+  Table,
+  Card,
+  CardHeader,
+  CardBody,
+  Input,
+  Button,
+  InputGroup,
+  InputGroupAddon,
+} from 'reactstrap';
 import WatchListEntry from './WatchListEntry';
 import {
   addToWatchlist,
@@ -47,12 +56,21 @@ export const WatchList = ({
         <CardHeader>
           <h4 className="d-inline-block">WatchList</h4>
           <div className="inputSection float-right d-inline-block d-flex justify-content-end">
-            <Input
-              data-testid="symbolInput"
-              value={newSymbol}
-              className="d-inline-block w-75"
-              onChange={(e) => onChange(e)}
-            ></Input>
+            <InputGroup className="w-50">
+              <InputGroupAddon addonType="prepend">
+                <Input type="select">
+                  <option>TSE</option>
+                  <option>NYSE</option>
+                </Input>
+              </InputGroupAddon>
+              <Input
+                placeholder="symbol"
+                data-testid="symbolInput"
+                value={newSymbol}
+                className="d-inline-block"
+                onChange={(e) => onChange(e)}
+              ></Input>
+            </InputGroup>
             <Button
               data-testid="symbolInputBtn"
               color="link"
