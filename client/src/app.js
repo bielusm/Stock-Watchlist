@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../docs/assets/styles.css';
 
 import { setToken } from './actions/auth';
+import { Spinner } from 'reactstrap';
 
 const store = configureStore;
 
@@ -23,7 +24,7 @@ const jsx = (
   <Provider store={store}>
     <Router>
       <Switch>
-        <Suspense fallback={<>Loading...</>}>
+        <Suspense fallback={<Spinner color="primary" />}>
           <Route exact path="/" component={HomePage} />
           <Route component={Routes} />
         </Suspense>
