@@ -71,10 +71,13 @@ describe('stock action tests', () => {
   });
   describe('getStockStats', () => {
     test('returns correct data', async (done) => {
-      mock.onGet().reply(200, ibm);
+      mock.onGet('/api/stocks/ibm/stats').replyOnce(200, ibm);
+      mock.onGet('/api/stocks/ibm/curr').replyOnce(200, { currentValue: 90 });
       store.dispatch(getStockStats('ibm')).then(() => {
         const actions = store.getActions();
-        expect(actions).toEqual([{ type: ADD_MISC_STOCK, payload: ibm }]);
+        expect(actions).toEqual([
+          { type: ADD_MISC_STOCK, payload: { ...ibm, currentValue: 90 } },
+        ]);
         done();
       });
     });
@@ -178,7 +181,16 @@ describe('stock action tests', () => {
 
   describe('getStockStatsForAllStocks', () => {
     test('should get data for each stock and call action', async (done) => {
-      mock.onGet().replyOnce(200, ibm).onGet().replyOnce(200, AAPL);
+      mock
+        .onGet('/api/stocks/ibm/stats')
+        .replyOnce(200, ibm)
+        .onGet('/api/stocks/AAPL/stats')
+        .replyOnce(200, AAPL);
+      mock
+        .onGet('/api/stocks/ibm/curr')
+        .replyOnce(200, { currentValue: 90 })
+        .onGet('/api/stocks/AAPL/curr')
+        .replyOnce(200, { currentValue: 50 });
       const stocks = {
         ibm: { loading: true, symbol: 'ibm' },
         AAPL: { loading: true, symbol: 'AAPL' },
@@ -186,8 +198,8 @@ describe('stock action tests', () => {
       store.dispatch(getStockStatsForAllStocks(stocks)).then(() => {
         const actions = store.getActions();
         expect(actions).toEqual([
-          { type: ADD_MAPPED_STOCK, payload: ibm },
-          { type: ADD_MAPPED_STOCK, payload: AAPL },
+          { type: ADD_MAPPED_STOCK, payload: { ...ibm, currentValue: 90 } },
+          { type: ADD_MAPPED_STOCK, payload: { ...AAPL, currentValue: 50 } },
         ]);
         done();
       });

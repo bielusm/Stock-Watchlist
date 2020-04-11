@@ -81,13 +81,15 @@ export const getStockStats = (symbol, misc = true) => async (
 ) => {
   const action = misc ? ADD_MISC_STOCK : ADD_MAPPED_STOCK;
   try {
-    const url = `/api/stocks/${symbol}`;
+    let url = `/api/stocks/${symbol}/stats`;
     const config = {
       method: 'get',
       headers: { 'x-auth-token': getState().user.token },
     };
     let res = await sendRequest(url, config);
-    dispatch({ type: action, payload: res.data });
+    url = `/api/stocks/${symbol}/curr`;
+    const currentValue = (await sendRequest(url, config)).data.currentValue;
+    dispatch({ type: action, payload: { ...res.data, currentValue } });
   } catch (error) {
     if (error.response) {
       error.response.data.errors.forEach((error) => {

@@ -1,6 +1,5 @@
 export const ibm = {
   symbol: 'ibm',
-  currentValue: 112.735,
   stats: {
     lowest: 90.56,
     highest: 158.75,
@@ -271,7 +270,6 @@ export const ibm = {
 
 export const AAPL = {
   symbol: 'AAPL',
-  currentValue: 241.41,
   stats: {
     lowest: 170.27,
     highest: 327.85,
