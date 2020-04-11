@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Table,
-  Card,
-  CardHeader,
-  CardBody,
-  Input,
-  Button,
-  InputGroup,
-  InputGroupAddon,
-} from 'reactstrap';
+import { Table, Card, CardHeader, CardBody } from 'reactstrap';
 import WatchListEntry from './WatchListEntry';
 import {
   addToWatchlist,
