@@ -13,6 +13,7 @@ import {
 import { getStockStats } from '../../actions/stocks';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import WatchListEntry from './WatchListEntry';
 
 export const LookUpSymbol = ({ getStockStats, stocks }) => {
   const [symbol, setSymbol] = useState('');
@@ -48,24 +49,23 @@ export const LookUpSymbol = ({ getStockStats, stocks }) => {
               <Button>Look Up Stock</Button>
             </FormGroup>
           </Form>
-          {stocks[symbol] && (
-            <Table>
-              <thead>
-                <tr>
-                  <th>Current Value</th>
-                  <th>52 Week Max</th>
-                  <th>52 Week Min</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{stocks[symbol].currentValue}</td>
-                  <td>{stocks[symbol].stats.highest}</td>
-                  <td>{stocks[symbol].stats.lowest}</td>
-                </tr>
-              </tbody>
-            </Table>
-          )}
+          <Table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Current Value</th>
+                <th>52 Week Max</th>
+                <th>% Change</th>
+                <th>52 Week Min</th>
+                <th>% Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stocks[symbol] && (
+                <WatchListEntry stock={stocks[symbol]} deleteBtn={false} />
+              )}
+            </tbody>
+          </Table>
         </CardBody>
       </Card>
     </>

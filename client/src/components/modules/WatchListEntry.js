@@ -4,8 +4,12 @@ import { Input, Button, Spinner } from 'reactstrap';
 import { connect } from 'react-redux';
 import { deleteFromWatchlist } from '../../actions/stocks';
 
-export const WatchListEntry = ({ stock, deleteFromWatchlist }) => {
-  const { loading, symbol } = stock;
+export const WatchListEntry = ({
+  stock,
+  deleteFromWatchlist,
+  deleteBtn = true,
+}) => {
+  const { loading, symbol, invalid } = stock;
   const [high, setHigh] = useState(0);
   const [low, setLow] = useState(0);
 
@@ -27,7 +31,7 @@ export const WatchListEntry = ({ stock, deleteFromWatchlist }) => {
   };
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !invalid) {
       setHigh(stock.stats.highest);
       setLow(stock.stats.lowest);
     }
@@ -36,22 +40,24 @@ export const WatchListEntry = ({ stock, deleteFromWatchlist }) => {
     deleteFromWatchlist(symbol);
   };
 
-  if (loading)
+  if (loading || invalid)
     return (
       <tr>
         <th>{symbol}</th>
         <th>
-          <Spinner color="primary" />
+          {loading ? <Spinner color="primary" /> : <>Error symbol invalid</>}
         </th>
         <th></th>
         <th></th>
         <th></th>
         <th></th>
-        <th>
-          <Button color="link" onClick={(e) => deleteSymbol(e)}>
-            <i className="fas fa-trash fa-lg"></i>
-          </Button>
-        </th>
+        {deleteBtn && (
+          <th>
+            <Button color="link" onClick={(e) => deleteSymbol(e)}>
+              <i className="fas fa-trash fa-lg"></i>
+            </Button>
+          </th>
+        )}
       </tr>
     );
 
@@ -81,15 +87,17 @@ export const WatchListEntry = ({ stock, deleteFromWatchlist }) => {
           ></Input>
         </th>
         <th data-testid="lowChange">{lowChange}%</th>
-        <th>
-          <Button
-            data-testid="deleteBtn"
-            color="link"
-            onClick={(e) => deleteSymbol(e)}
-          >
-            <i className="fas fa-trash fa-lg"></i>
-          </Button>
-        </th>
+        {deleteBtn && (
+          <th>
+            <Button
+              data-testid="deleteBtn"
+              color="link"
+              onClick={(e) => deleteSymbol(e)}
+            >
+              <i className="fas fa-trash fa-lg"></i>
+            </Button>
+          </th>
+        )}
       </tr>
     </>
   );
@@ -97,7 +105,6 @@ export const WatchListEntry = ({ stock, deleteFromWatchlist }) => {
 
 WatchListEntry.propTypes = {
   stock: PropTypes.object.isRequired,
-  deleteFromWatchlist: PropTypes.func.isRequired,
 };
 
 export default connect(undefined, { deleteFromWatchlist })(WatchListEntry);

@@ -88,6 +88,41 @@ describe('stock action tests', () => {
         done();
       });
     });
+
+    test('should set action based on misc value', async (done) => {
+      mock.onGet().reply(200, ibm);
+
+      await store.dispatch(getStockStats('ibm'));
+      await store.dispatch(getStockStats('ibm', false));
+      const actions = store.getActions();
+      const expected = [
+        { type: ADD_MISC_STOCK, payload: ibm },
+        { type: ADD_MAPPED_STOCK, payload: ibm },
+      ];
+      expect(actions).toEqual(expected);
+      done();
+    });
+
+    test('should set stock invalid when invalid symbol given', async (done) => {
+      mock.onGet().replyOnce(400, {
+        errors: [{ msg: `Invalid API call, possibly wrong symbol TSE:AAPL` }],
+      });
+      store.dispatch(getStockStats('TSE:AAPL')).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([
+          {
+            type: ADD_MISC_STOCK,
+            payload: { invalid: true, symbol: 'TSE:AAPL' },
+          },
+          addAlert(
+            1,
+            'Invalid API call, possibly wrong symbol TSE:AAPL',
+            'danger'
+          ),
+        ]);
+        done();
+      });
+    });
   });
   describe('addToWatchList', () => {
     test('should call action', async (done) => {
@@ -162,6 +197,30 @@ describe('stock action tests', () => {
       store.dispatch(getStockStatsForAllStocks([])).then(() => {
         const actions = store.getActions();
         expect(actions).toEqual([]);
+        done();
+      });
+    });
+
+    test('should set stock invalid when invalid symbol given', async (done) => {
+      mock.onGet().replyOnce(400, {
+        errors: [{ msg: `Invalid API call, possibly wrong symbol TSE:AAPL` }],
+      });
+      const stocks = {
+        AAPL: { loading: true, symbol: 'TSE:AAPL' },
+      };
+      store.dispatch(getStockStatsForAllStocks(stocks)).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([
+          {
+            type: ADD_MAPPED_STOCK,
+            payload: { invalid: true, symbol: 'TSE:AAPL' },
+          },
+          addAlert(
+            1,
+            'Invalid API call, possibly wrong symbol TSE:AAPL',
+            'danger'
+          ),
+        ]);
         done();
       });
     });

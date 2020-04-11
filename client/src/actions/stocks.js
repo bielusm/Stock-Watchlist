@@ -13,22 +13,26 @@ export const getStockStatsForAllStocks = (stocks) => async (
   dispatch,
   getState
 ) => {
-  try {
-    for (const key of Object.keys(stocks)) {
-      const url = `/api/stocks/${stocks[key].symbol}`;
+  const action = ADD_MAPPED_STOCK;
+  for (const key of Object.keys(stocks)) {
+    let symbol = stocks[key].symbol;
+    try {
+      const url = `/api/stocks/${symbol}`;
       const config = {
         method: 'get',
         headers: { 'x-auth-token': getState().user.token },
       };
       let res = await sendRequest(url, config);
-      dispatch({ type: ADD_MAPPED_STOCK, payload: res.data });
+      dispatch({ type: action, payload: res.data });
+    } catch (error) {
+      if (error.response) {
+        error.response.data.errors.forEach((error) => {
+          if (error.msg === `Invalid API call, possibly wrong symbol ${symbol}`)
+            dispatch({ type: action, payload: { symbol, invalid: true } });
+          dispatch(setAlert(error.msg, 'danger'));
+        });
+      } else console.error(error);
     }
-  } catch (error) {
-    if (error.response) {
-      error.response.data.errors.forEach((error) => {
-        dispatch(setAlert(error.msg, 'danger'));
-      });
-    } else console.error(error);
   }
 };
 
@@ -95,6 +99,7 @@ export const getStockStats = (symbol, misc = true) => async (
   dispatch,
   getState
 ) => {
+  const action = misc ? ADD_MISC_STOCK : ADD_MAPPED_STOCK;
   try {
     const url = `/api/stocks/${symbol}`;
     const config = {
@@ -102,11 +107,12 @@ export const getStockStats = (symbol, misc = true) => async (
       headers: { 'x-auth-token': getState().user.token },
     };
     let res = await sendRequest(url, config);
-    if (misc) dispatch({ type: ADD_MISC_STOCK, payload: res.data });
-    else dispatch({ type: ADD_MAPPED_STOCK, payload: res.data });
+    dispatch({ type: action, payload: res.data });
   } catch (error) {
     if (error.response) {
       error.response.data.errors.forEach((error) => {
+        if (error.msg === `Invalid API call, possibly wrong symbol ${symbol}`)
+          dispatch({ type: action, payload: { symbol, invalid: true } });
         dispatch(setAlert(error.msg, 'danger'));
       });
     } else console.error(error);

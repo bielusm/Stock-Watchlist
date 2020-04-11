@@ -71,7 +71,11 @@ router.get('/:symbol', [auth], async (req, res) => {
     if (message.includes('Invalid API call'))
       return res
         .status('400')
-        .json({ errors: [{ msg: 'Invalid API call, possibly wrong symbol' }] });
+        .json({
+          errors: [
+            { msg: `Invalid API call, possibly wrong symbol ${symbol}` },
+          ],
+        });
     console.error(error);
     return res.status(400).json({ errors: [{ msg: 'Server Error' }] });
   }

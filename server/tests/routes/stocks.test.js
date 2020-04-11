@@ -112,7 +112,7 @@ describe('stocks route', () => {
         .set('x-auth-token', token)
         .expect(400);
       expect(response.body).toEqual({
-        errors: [{ msg: 'Invalid API call, possibly wrong symbol' }],
+        errors: [{ msg: 'Invalid API call, possibly wrong symbol baddata' }],
       });
       done();
     });
