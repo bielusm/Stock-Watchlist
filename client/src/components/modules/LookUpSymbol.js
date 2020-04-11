@@ -14,41 +14,24 @@ import { getStockStats } from '../../actions/stocks';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import WatchListEntry from './WatchListEntry';
+import AddStock from './AddStock';
 
 export const LookUpSymbol = ({ getStockStats, stocks }) => {
   const [symbol, setSymbol] = useState('');
 
-  const onChange = (e) => {
-    setSymbol(e.target.value);
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    getStockStats(symbol);
+  const addStock = (newSymbol) => {
+    setSymbol(newSymbol);
+    getStockStats(newSymbol);
   };
 
   return (
     <>
       <Card>
-        <CardHeader tag="h4">Look Up Stock By Symbol</CardHeader>
+        <CardHeader>
+          <h4 className="d-inline-block">Look Up Stock By Symbol</h4>
+          <AddStock addStock={addStock} />
+        </CardHeader>
         <CardBody>
-          <Form onSubmit={(e) => onSubmit(e)}>
-            <FormGroup>
-              <Label for="symbol">Symbol</Label>
-              <Input
-                id="symbol"
-                type="text"
-                name="symbol"
-                required
-                value={symbol}
-                className="symbol"
-                onChange={(e) => onChange(e)}
-              ></Input>
-            </FormGroup>
-            <FormGroup>
-              <Button>Look Up Stock</Button>
-            </FormGroup>
-          </Form>
           <Table>
             <thead>
               <tr>

@@ -18,6 +18,7 @@ import {
 } from '../../actions/stocks';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import AddStock from './AddStock';
 
 export const WatchList = ({
   mappedStocks,
@@ -37,18 +38,9 @@ export const WatchList = ({
     }
   }, [loading]);
 
-  const [newSymbol, setNewSymbol] = useState('');
-  const [exchange, setExchange] = useState('TSE');
-
-  const onChange = (e) => {
-    setNewSymbol(e.target.value.trim());
-  };
-
-  const onClick = (e) => {
-    if (newSymbol) {
-      addToWatchlist(exchange + ':' + newSymbol);
-      getStockStats(newSymbol, false);
-    }
+  const addStock = (symbol) => {
+    addToWatchlist(symbol);
+    getStockStats(symbol, false);
   };
 
   return (
@@ -56,33 +48,7 @@ export const WatchList = ({
       <Card>
         <CardHeader>
           <h4 className="d-inline-block">WatchList</h4>
-          <div className="inputSection float-right d-inline-block d-flex justify-content-end">
-            <InputGroup className="w-50">
-              <InputGroupAddon addonType="prepend">
-                <Input
-                  type="select"
-                  value={exchange}
-                  onChange={(e) => setExchange(e.target.value)}
-                >
-                  <option value="TSE">TSE</option>
-                  <option value="NYSE">NYSE</option>
-                </Input>
-              </InputGroupAddon>
-              <Input
-                placeholder="symbol"
-                value={newSymbol}
-                className="d-inline-block"
-                onChange={(e) => onChange(e)}
-              ></Input>
-            </InputGroup>
-            <Button
-              data-testid="symbolInputBtn"
-              color="link"
-              onClick={(e) => onClick(e)}
-            >
-              <i className="fas fa-plus fa-lg"></i>
-            </Button>
-          </div>
+          <AddStock addStock={addStock} />
         </CardHeader>
         <CardBody>
           <Table>

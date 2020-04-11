@@ -1,7 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { WatchList } from '../../../src/components/modules/WatchList';
 jest.mock('../../../src/components/modules/WatchListEntry');
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
 
 describe('WatchList tests', () => {
   let addToWatchlist = jest.fn();
@@ -9,39 +13,6 @@ describe('WatchList tests', () => {
   let getStockStats = jest.fn();
   let getStockStatsForAllStocks = jest.fn();
   let stocks = {};
-  const value = 'ibm';
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
-  test('should call add to watchlist', () => {
-    render(
-      <WatchList
-        mappedStocks={stocks}
-        addToWatchlist={addToWatchlist}
-        getWatchlist={getWatchlist}
-        getStockStats={getStockStats}
-        getStockStatsForAllStocks={getStockStatsForAllStocks}
-        loading={true}
-      />
-    );
-
-    const input = screen.getByPlaceholderText('symbol');
-    fireEvent.change(input, { target: { value } });
-
-    const btn = screen.getByTestId('symbolInputBtn');
-    fireEvent.click(btn);
-
-    expect(addToWatchlist).toHaveBeenLastCalledWith('TSE:' + value);
-    const select = screen.getByDisplayValue('TSE');
-    fireEvent.change(select, { target: { value: 'NYSE' } });
-
-    fireEvent.change(input, { target: { value } });
-    fireEvent.click(btn);
-
-    expect(addToWatchlist).toHaveBeenLastCalledWith('NYSE:' + value);
-  });
 
   test('should call getStockStats for each stock', () => {
     const stocks = {
