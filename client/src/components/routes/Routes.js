@@ -14,18 +14,20 @@ const Routes = () => {
   return (
     <>
       <TopNav />
-      <Container fluid="true" className="pt-2 mx-auto">
-        <Alerts />
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <PrivateRoute
-            exact
-            path={['/', '/dashboard']}
-            component={Dashboard}
-          />
-        </Switch>
-      </Container>
+      <div className="page">
+        <Container fluid="true" className="pt-2 mx-auto">
+          <Alerts />
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <PrivateRoute
+              exact
+              path={['/', '/dashboard']}
+              component={Dashboard}
+            />
+          </Switch>
+        </Container>
+      </div>
     </>
   );
 };

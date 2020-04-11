@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Table, Card, CardHeader, CardBody } from 'reactstrap';
 import WatchListEntry from './WatchListEntry';
 import {
@@ -42,7 +42,7 @@ export const WatchList = ({
           <AddStock addStock={addStock} />
         </CardHeader>
         <CardBody>
-          <Table>
+          <Table className="watchlistTable">
             <thead>
               <tr>
                 <th>Symbol</th>
