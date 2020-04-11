@@ -71,8 +71,8 @@ router.get('/:symbol/stats', [auth], async (req, res) => {
 //@desc Get currentValue for symbol
 //@access Private
 router.get('/:symbol/curr', [auth], async (req, res) => {
+  const { symbol } = req.params;
   try {
-    const { symbol } = req.params;
     let result = await axios.get(
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
     );
