@@ -5,7 +5,6 @@ const {
   connect,
 } = require('../fixtures/seedDatabase');
 const SymbolModel = require('../../models/Symbol');
-const UserModel = require('../../models/User');
 
 let token = '';
 
@@ -43,7 +42,8 @@ describe('stocks route', () => {
   describe('test private routes', () => {
     test('should give proper error', async (done) => {
       const testRoutes = [
-        { url: '/api/stocks/ibm', method: 'get', data: undefined },
+        { url: '/api/stocks/ibm/stats', method: 'get', data: undefined },
+        { url: '/api/stocks/ibm/curr', method: 'get', data: undefined },
       ];
       testAuth(testRoutes, done);
     });
@@ -53,7 +53,8 @@ describe('stocks route', () => {
     test('returns propper warning', async (done) => {
       const testRoutes = [
         {
-          url: '/api/stocks/ibm',
+          url: '/api/stocks/ibm/curr',
+          url: '/api/stocks/ibm/stats',
           method: 'get',
           data: undefined,
           apiUrl: `https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=$ibm&apikey=${process.env.ALPHA_VANTAGE_KEY}`,
@@ -83,18 +84,14 @@ describe('stocks route', () => {
     });
   });
 
-  describe('GET /api/stocks', () => {
+  describe('GET /api/stocks/stats', () => {
     const mockValidResponse = () => {
-      mock
-        .onGet()
-        .replyOnce(200, require('../fixtures/stocks/ibmStocks.json'))
-        .onGet()
-        .replyOnce(200, require('../fixtures/stocks/globalQuoteIbm.json'));
+      mock.onGet().replyOnce(200, require('../fixtures/stocks/ibmStocks.json'));
     };
-    test('returns stock data', async (done) => {
+    test('returns stock stats', async (done) => {
       mockValidResponse();
       const response = await request(app)
-        .get('/api/stocks/ibm')
+        .get('/api/stocks/ibm/stats')
         .set('x-auth-token', token)
         .expect(200);
       expect(response.body).toMatchSnapshot({});
@@ -108,7 +105,7 @@ describe('stocks route', () => {
       });
 
       const response = await request(app)
-        .get('/api/stocks/baddata')
+        .get('/api/stocks/baddata/stats')
         .set('x-auth-token', token)
         .expect(400);
       expect(response.body).toEqual({
@@ -125,7 +122,7 @@ describe('stocks route', () => {
       expect(!symbolData);
 
       const response = await request(app)
-        .get('/api/stocks/ibm')
+        .get('/api/stocks/ibm/stats')
         .set('x-auth-token', token);
 
       symbolData = await SymbolModel.findOne({ symbol });
@@ -136,7 +133,7 @@ describe('stocks route', () => {
     test('should not add if symbol already exists', async (done) => {
       mockValidResponse();
       let response = await request(app)
-        .get('/api/stocks/ibm')
+        .get('/api/stocks/ibm/stats')
         .set('x-auth-token', token);
       const symbol = 'ibm';
       const symbolData = await SymbolModel.findOne({ symbol });
@@ -145,7 +142,7 @@ describe('stocks route', () => {
         .onGet()
         .replyOnce(200, require('../fixtures/stocks/globalQuoteIbm.json'));
       response = await request(app)
-        .get('/api/stocks/ibm')
+        .get('/api/stocks/ibm/stats')
         .set('x-auth-token', token);
 
       const newSymbolData = await SymbolModel.findOne({ symbol });
@@ -156,7 +153,7 @@ describe('stocks route', () => {
     test('should overrite data if it is outdated', async (done) => {
       mockValidResponse();
       let response = await request(app)
-        .get('/api/stocks/ibm')
+        .get('/api/stocks/ibm/stats')
         .set('x-auth-token', token);
       const symbol = 'ibm';
       const symbolData = await SymbolModel.findOne({ symbol });
@@ -169,6 +166,23 @@ describe('stocks route', () => {
         .set('x-auth-token', token);
       const newSymbolData = await SymbolModel.findOne({ symbol });
       expect(newSymbolData).not.toEqual(symbolData);
+      done();
+    });
+  });
+
+  describe('GET /api/stocks/curr', () => {
+    const mockValidResponse = () => {
+      mock
+        .onGet()
+        .replyOnce(200, require('../fixtures/stocks/globalQuoteIbm.json'));
+    };
+    test('returns stock stats', async (done) => {
+      mockValidResponse();
+      const response = await request(app)
+        .get('/api/stocks/ibm/curr')
+        .set('x-auth-token', token)
+        .expect(200);
+      expect(response.body.currentValue).toEqual('112.93');
       done();
     });
   });

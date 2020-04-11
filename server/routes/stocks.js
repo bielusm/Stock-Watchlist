@@ -9,12 +9,12 @@ const {
 } = require('../stocks/stockCalculations');
 const SymbolModel = require('../models/Symbol');
 const moment = require('moment');
+const { ALPHA_VANTAGE_KEY } = process.env;
 
-//@route GET api/stocks
+//@route GET api/stocks/symbol/stats
 //@desc Get stock stats for symbol
 //@access Private
-router.get('/:symbol', [auth], async (req, res) => {
-  const { ALPHA_VANTAGE_KEY } = process.env;
+router.get('/:symbol/stats', [auth], async (req, res) => {
   const { symbol } = req.params;
   let stats, last52;
   try {
@@ -50,6 +50,29 @@ router.get('/:symbol', [auth], async (req, res) => {
       stats = stockStats.stats;
       last52 = stockStats.last52;
     }
+
+    return res.status(200).send({ symbol, stats, last52 });
+  } catch (error) {
+    const { message } = error;
+    if (message.includes('5 calls per minute'))
+      return res
+        .status('429')
+        .json({ errors: [{ msg: 'Too many api calls' }] });
+    if (message.includes('Invalid API call'))
+      return res.status('400').json({
+        errors: [{ msg: `Invalid API call, possibly wrong symbol ${symbol}` }],
+      });
+    console.error(error);
+    return res.status(400).json({ errors: [{ msg: 'Server Error' }] });
+  }
+});
+
+//@route GET api/stocks/symbol/curr
+//@desc Get currentValue for symbol
+//@access Private
+router.get('/:symbol/curr', [auth], async (req, res) => {
+  try {
+    const { symbol } = req.params;
     let result = await axios.get(
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
     );
@@ -61,7 +84,8 @@ router.get('/:symbol', [auth], async (req, res) => {
     const currentValue = getCurrentValue(result.data['Global Quote']).toFixed(
       2
     );
-    return res.status(200).send({ symbol, currentValue, stats, last52 });
+
+    return res.status(200).send({ currentValue });
   } catch (error) {
     const { message } = error;
     if (message.includes('5 calls per minute'))
