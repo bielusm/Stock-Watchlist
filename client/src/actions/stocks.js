@@ -9,30 +9,10 @@ import {
 } from './types';
 import { sendRequest } from '../util/requests';
 
-export const getStockStatsForAllStocks = (stocks) => async (
-  dispatch,
-  getState
-) => {
-  const action = ADD_MAPPED_STOCK;
+export const getStockStatsForAllStocks = (stocks) => async (dispatch) => {
   for (const key of Object.keys(stocks)) {
     let symbol = stocks[key].symbol;
-    try {
-      const url = `/api/stocks/${symbol}`;
-      const config = {
-        method: 'get',
-        headers: { 'x-auth-token': getState().user.token },
-      };
-      let res = await sendRequest(url, config);
-      dispatch({ type: action, payload: res.data });
-    } catch (error) {
-      if (error.response) {
-        error.response.data.errors.forEach((error) => {
-          if (error.msg === `Invalid API call, possibly wrong symbol ${symbol}`)
-            dispatch({ type: action, payload: { symbol, invalid: true } });
-          dispatch(setAlert(error.msg, 'danger'));
-        });
-      } else console.error(error);
-    }
+    await dispatch(getStockStats(symbol, false));
   }
 };
 
