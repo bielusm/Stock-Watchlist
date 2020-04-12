@@ -66,8 +66,8 @@ export const WatchList = ({
               </tr>
             </thead>
             <tbody>
-              {Object.keys(mappedStocks).map((key, index) => {
-                return <WatchListEntry stock={mappedStocks[key]} key={index} />;
+              {Object.keys(mappedStocks).map((key) => {
+                return <WatchListEntry stock={mappedStocks[key]} key={key} />;
               })}
             </tbody>
           </Table>
