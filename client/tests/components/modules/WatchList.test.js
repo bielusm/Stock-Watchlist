@@ -12,6 +12,7 @@ describe('WatchList tests', () => {
   let getWatchlist = jest.fn();
   let getStockStats = jest.fn();
   let getStockStatsForAllStocks = jest.fn();
+  let refreshCurrentForWatchlist = jest.fn();
   let stocks = {};
 
   test('should call getStockStats for each stock', () => {
@@ -28,6 +29,7 @@ describe('WatchList tests', () => {
         getWatchlist={getWatchlist}
         getStockStats={getStockStats}
         getStockStatsForAllStocks={getStockStatsForAllStocks}
+        refreshCurrentForWatchlist={refreshCurrentForWatchlist}
         loading={false}
       />
     );
@@ -46,6 +48,7 @@ describe('WatchList tests', () => {
         getWatchlist={getWatchlist}
         getStockStats={getStockStats}
         getStockStatsForAllStocks={getStockStatsForAllStocks}
+        refreshCurrentForWatchlist={refreshCurrentForWatchlist}
         loading={true}
       />
     );
