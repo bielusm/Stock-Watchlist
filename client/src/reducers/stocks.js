@@ -6,6 +6,7 @@ import {
   REMOVE_MAPPED_STOCK,
   MAPPED_STOCK_LOADING,
   MAPPED_STOCK_LOADED,
+  SET_STOCK_VALUE,
 } from '../actions/types';
 export const initialState = {
   miscStocks: {},
@@ -17,6 +18,16 @@ import { omit } from 'lodash';
 const stocks = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case SET_STOCK_VALUE:
+      const { symbol, currentValue } = payload;
+      return {
+        ...state,
+        mappedStocks: {
+          ...state.mappedStocks,
+          [symbol]: { ...state.mappedStocks[symbol], currentValue },
+        },
+      };
+
     case MAPPED_STOCK_LOADING:
       return {
         ...state,

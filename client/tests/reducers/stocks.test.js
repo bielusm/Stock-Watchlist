@@ -7,6 +7,7 @@ import {
   REMOVE_MAPPED_STOCK,
   MAPPED_STOCK_LOADED,
   MAPPED_STOCK_LOADING,
+  SET_STOCK_VALUE,
 } from '../../src/actions/types';
 import { AAPL, ibm } from '../fixtures/stats';
 describe('stocks reducer tests', () => {
@@ -94,5 +95,26 @@ describe('stocks reducer tests', () => {
     expect(
       stocksReducer(res, { type: MAPPED_STOCK_LOADED }).mappedStocksLoading
     ).toEqual(false);
+  });
+
+  test(SET_STOCK_VALUE, () => {
+    let res = stocksReducer(undefined, {
+      type: ADD_MAPPED_PLACEHOLDER,
+      payload: 'ibm',
+    });
+
+    res = stocksReducer(res, {
+      type: ADD_MAPPED_STOCK,
+      payload: { ...ibm, currentValue: 50 },
+    });
+
+    expect(res.mappedStocks['ibm'].currentValue).toEqual(50);
+
+    res = stocksReducer(res, {
+      type: SET_STOCK_VALUE,
+      payload: { symbol: 'ibm', currentValue: 25 },
+    });
+
+    expect(res.mappedStocks['ibm'].currentValue).toEqual(25);
   });
 });
