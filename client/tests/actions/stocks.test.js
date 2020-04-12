@@ -4,6 +4,7 @@ import {
   deleteFromWatchlist,
   getWatchlist,
   getStockStatsForAllStocks,
+  refreshCurrentForWatchlist,
 } from '../../src/actions/stocks';
 import configureMockStore from 'redux-mock-store';
 import ReduxThunk from 'redux-thunk';
@@ -21,6 +22,7 @@ import {
   MAPPED_STOCK_LOADING,
   MAPPED_STOCK_LOADED,
   ADD_MAPPED_STOCK,
+  SET_STOCK_VALUE,
 } from '../../src/actions/types';
 
 const mockStore = configureMockStore([ReduxThunk]);
@@ -57,6 +59,11 @@ describe('stock action tests', () => {
           getStockStatsForAllStocks({
             ibm: { loading: true, symbol: 'ibm' },
             AAPL: { loading: true, symbol: 'AAPL' },
+          }),
+        () =>
+          refreshCurrentForWatchlist({
+            ibm: { symbol: 'ibm', currentValue: 10 },
+            aapl: { symbol: 'aapl', currentValue: 5 },
           }),
       ];
       for (const func of functions) {
@@ -233,6 +240,34 @@ describe('stock action tests', () => {
             'danger'
           ),
         ]);
+        done();
+      });
+    });
+  });
+
+  describe('refreshCurrentForWatchlist', () => {
+    test('should call curr for each stock', async (done) => {
+      mock.onGet('/api/stocks/ibm/curr').replyOnce(200, { currentValue: 50 });
+      mock.onGet('/api/stocks/aapl/curr').replyOnce(200, { currentValue: 25 });
+
+      const watchlist = {
+        ibm: { symbol: 'ibm', currentValue: 10 },
+        aapl: { symbol: 'aapl', currentValue: 5 },
+      };
+
+      store.dispatch(refreshCurrentForWatchlist(watchlist)).then(() => {
+        const actions = store.getActions();
+        const expected = [
+          {
+            type: SET_STOCK_VALUE,
+            payload: { symbol: 'ibm', currentValue: 50 },
+          },
+          {
+            type: SET_STOCK_VALUE,
+            payload: { symbol: 'aapl', currentValue: 25 },
+          },
+        ];
+        expect(actions).toEqual(expected);
         done();
       });
     });
