@@ -6,6 +6,7 @@ import {
   getWatchlist,
   getStockStats,
   getStockStatsForAllStocks,
+  refreshCurrentForWatchlist,
 } from '../../actions/stocks';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -17,6 +18,7 @@ export const WatchList = ({
   getWatchlist,
   getStockStats,
   getStockStatsForAllStocks,
+  refreshCurrentForWatchlist,
   loading,
 }) => {
   useEffect(() => {
@@ -26,6 +28,15 @@ export const WatchList = ({
   useEffect(() => {
     if (!loading) {
       getStockStatsForAllStocks(mappedStocks);
+
+      const interval = 1000 * 60 * 20;
+      const updateInterval = setInterval(() => {
+        refreshCurrentForWatchlist(mappedStocks);
+      }, interval);
+
+      return () => {
+        clearInterval(updateInterval);
+      };
     }
   }, [loading]);
 
@@ -73,6 +84,7 @@ WatchList.propTypes = {
   getStockStatsForAllStocks: PropTypes.func.isRequired,
   getStockStats: PropTypes.func.isRequired,
   getWatchlist: PropTypes.func.isRequired,
+  refreshCurrentForWatchlist: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -85,4 +97,5 @@ export default connect(mapStateToProps, {
   getWatchlist,
   getStockStats,
   getStockStatsForAllStocks,
+  refreshCurrentForWatchlist,
 })(WatchList);
