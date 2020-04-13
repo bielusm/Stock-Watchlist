@@ -26,13 +26,13 @@ export const LookUpSymbol = ({ getStockStats, stocks }) => {
 
   return (
     <>
-      <Card>
+      <Card className="my-3">
         <CardHeader>
           <h4 className="d-inline-block">Look Up Stock By Symbol</h4>
           <AddStock addStock={addStock} />
         </CardHeader>
-        <CardBody>
-          <Table>
+        <CardBody className="p-0">
+          <Table styles={{ minHeight: '10px' }}>
             <thead>
               <tr>
                 <th>Symbol</th>

@@ -47,12 +47,12 @@ export const WatchList = ({
 
   return (
     <>
-      <Card>
+      <Card className="my-3">
         <CardHeader>
           <h4 className="d-inline-block">WatchList</h4>
           <AddStock addStock={addStock} />
         </CardHeader>
-        <CardBody>
+        <CardBody className="p-0">
           <Table className="watchlistTable">
             <thead>
               <tr>
