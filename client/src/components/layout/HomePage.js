@@ -16,7 +16,8 @@ const HomePage = ({ history, authenticated }) => {
           top: '0',
           width: '100%',
           height: '100%',
-          backgroundImage: "url('./')",
+          backgroundImage: "url('./assets/stocks.jpg')",
+          backgroundSize: 'cover',
           filter: 'grayscale(100%)',
         }}
       ></div>
@@ -30,7 +31,7 @@ const HomePage = ({ history, authenticated }) => {
           border: '1px solid black',
         }}
       >
-        <CardHeader tag="h4">Stock Watchlist / Trends</CardHeader>
+        <CardHeader tag="h4">Stock Watchlist</CardHeader>
         <CardBody>
           <div className="mx-auto">
             <Button

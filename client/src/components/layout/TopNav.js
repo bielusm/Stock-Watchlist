@@ -38,19 +38,19 @@ export const TopNav = ({ authenticated, logout }) => {
 
   return (
     <Navbar color="light">
-      <NavbarBrand>Stock Watchlist / Trends</NavbarBrand>
+      <NavbarBrand>Stock Watchlist</NavbarBrand>
       <Nav>{authenticated ? authLinks : guestLinks}</Nav>
     </Navbar>
   );
 };
 
 TopNav.propTypes = {
-  authenticated: PropTypes.bool.isRequired
+  authenticated: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
 });
 
 export default connect(mapStateToProps, { logout })(withRouter(TopNav));
