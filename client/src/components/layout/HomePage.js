@@ -17,7 +17,7 @@ const HomePage = ({ history, authenticated }) => {
           width: '100%',
           height: '100%',
           backgroundImage: "url('./')",
-          filter: 'grayscale(100%)'
+          filter: 'grayscale(100%)',
         }}
       ></div>
       <Card
@@ -27,12 +27,12 @@ const HomePage = ({ history, authenticated }) => {
           left: '50%',
           top: '50%',
           transform: 'translate(-50%, -50%)',
-          border: '1px solid black'
+          border: '1px solid black',
         }}
       >
         <CardHeader tag="h4">Stock Watchlist / Trends</CardHeader>
         <CardBody>
-          <div className="mx-auto" style={{ width: '50%' }}>
+          <div className="mx-auto">
             <Button
               color="primary"
               block
@@ -62,12 +62,12 @@ const HomePage = ({ history, authenticated }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  authenticated: state.user.authenticated
+const mapStateToProps = (state) => ({
+  authenticated: state.user.authenticated,
 });
 
 HomePage.propTypes = {
-  authenticated: PropTypes.bool.isRequired
+  authenticated: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps)(HomePage);
